@@ -45,6 +45,54 @@ description: Use when completing project work and need to extract reusable knowl
 
 ---
 
+### Phase 1.2: 知识类型识别 (Knowledge Type Detection)
+
+**核心任务**：判断识别到的资产属于"通用能力"还是"技术知识"，从而选择合适的模板和目标目录。
+
+#### 判断标准
+
+| 维度 | 通用能力/软技能 | 技术/专业知识 |
+|------|---------------|-------------|
+| **关键词特征** | 思维、决策、管理、习惯、认知、沟通、心理、策略、创作 | API、算法、架构、代码、协议、函数、框架、数据结构、设计模式 |
+| **内容形态** | 案例分析、心理机制、行为模式、方法论、工作流程 | 函数签名、流程图、代码块、参数表、技术规范、架构图 |
+| **核心目标** | 改变认知/行为、提升软实力 | 掌握用法、理解原理、解决技术问题 |
+| **目标用户** | 泛用人群（职场人、创作者等） | 特定领域专家（程序员、架构师等） |
+| **典型示例** | GTD方法、拖延症分析、写作技巧、职场决策 | React Hooks、快速排序、微服务架构、DICOM协议 |
+
+#### 自动判断逻辑
+
+1. **扫描关键词频率**：
+   - 统计文档中"算法"、"代码"、"API"、"架构"等技术关键词出现次数
+   - 统计"思维"、"决策"、"习惯"、"认知"等软技能关键词出现次数
+   - 比较两类关键词的频率比值
+
+2. **检测内容特征**：
+   - 是否包含代码块（```语法）？
+   - 是否包含技术参数表格？
+   - 是否包含数学公式/算法伪代码？
+
+3. **分析主题领域**：
+   - 源文件路径：`1专业技能/` → 倾向技术知识
+   - 源文件路径：`3通用技能/` → 倾向通用能力
+
+4. **输出判断结果**：
+   - **类型A - 通用能力**：使用五层结构模板，目标目录 `3通用技能/`
+   - **类型T - 技术知识**：使用技术文档模板，目标目录 `1专业技能/`
+   - **类型H - 混合型**：主要是软技能但包含技术示例（如"编程习惯养成"），使用五层结构但允许嵌入代码
+
+#### 模板选择映射
+
+| 知识类型 | 典型特征 | 使用模板 | 目标目录 |
+|---------|---------|----------|----------|
+| 通用能力 (A) | 软技能、方法论、心智模型 | 五层结构（template_complete.md） | `3通用技能/` |
+| 技术文档 (T1) | API用法、工具脚本、配置规范 | 技术文档模板（template_technical.md） | `1专业技能/` |
+| 算法知识 (T2) | 算法、数据结构、复杂度分析 | 算法模板（template_algorithm.md） | `1专业技能/A软件编程技能/算法与数据结构/` |
+| 架构设计 (T3) | 架构决策、系统设计、模式对比 | 架构决策记录（template_architecture.md） | `1专业技能/A软件编程技能/架构设计/` |
+
+**注意**：如果自动判断不确定（如混合型内容），在 Phase 2.4 提案阶段询问用户确认模板选择。
+
+---
+
 ### Phase 1.5: 关系识别 (Relationship Analysis)
 
 **关键问题**：当识别到多个候选资产时，它们应该合并为一张完整卡片，还是保持独立？
@@ -81,22 +129,32 @@ description: Use when completing project work and need to extract reusable knowl
 
 **如果识别到需要合并的资产组合**：
 
-| ID | 资产类型 | 建议标题 | 合并建议 | 完整度 | 处理策略 |
-| :-- | :-- | :-- | :-- | :-- | :-- |
-| 1 | Level S (模型) | `[道-决策模型]-XXX` | ⚠️ **主卡片** | 40% | 合并后补全 |
-| 2 | Level A (Prompt) | `Prompt-XXX` | → **合并到1** | 60% | 合并到1 |
+| ID | 资产类型 | 知识类型 | 建议标题 | 建议模板 | 合并建议 | 完整度 | 处理策略 |
+| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
+| 1 | Level S (模型) | 通用能力 | `[道-决策模型]-XXX` | 五层结构 | ⚠️ **主卡片** | 40% | 合并后补全 |
+| 2 | Level A (Prompt) | 通用能力 | `Prompt-XXX` | 五层结构 | → **合并到1** | 60% | 合并到1 |
 
 **如果识别到独立资产**：
 
-| ID | 资产类型 | 建议标题 | 剥离理由 | 完整度 | 处理建议 |
-| :-- | :-- | :-- | :-- | :-- | :-- |
-| 1 | Level A | `[术-XXX]` | 移除特定语境... | 80% | 可入库 |
+| ID | 资产类型 | 知识类型 | 建议标题 | 建议模板 | 目标目录 | 剥离理由 | 完整度 | 处理建议 |
+| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
+| 1 | Level A | 技术知识 | `[技术]-React Hooks用法` | 技术文档模板 | `1专业技能/前端开发/` | 移除项目特定语境... | 85% | 可入库 |
 
 #### Step 2.4: 用户交互
 
-**最后询问**（包含合并选项）：
-> **检测到资产关系分析结果：**
+**最后询问**（包含合并选项和模板确认）：
+> **📊 资产提取提案**
+>
+> **知识类型判断**：
+> - 资产1：检测到技术关键词（算法、代码、复杂度），判定为"技术知识"
+> - 资产2：检测到软技能关键词（思维、决策），判定为"通用能力"
+>
+> **关系分析结果**：
 > - 资产1和2存在"模型-工具"包含关系，建议合并
+>
+> **建议模板**：
+> - 资产1 → 算法模板（包含复杂度分析、伪代码）
+> - 资产2 → 五层结构（包含归因和底层逻辑）
 >
 > **请选择处理方式**：
 > - `merge 1,2` → 合并为一个完整卡片（推荐）
@@ -104,7 +162,17 @@ description: Use when completing project work and need to extract reusable knowl
 > - `auto` → 自动判断（采用上述建议）
 > - `all` → 执行全部独立资产
 > - `1` → 只执行ID=1的资产
+> - `tech 1` → 强制资产1使用技术模板（覆盖自动判断）
+> - `general 1` → 强制资产1使用五层结构（覆盖自动判断）
 > - `del` → 放弃全部
+
+**如果自动判断不确定**（如混合型内容），明确询问：
+> ⚠️ **需要你的确认**：
+> 资产1既包含代码示例，又涉及思维方式的改变（如"函数式编程思维"）。
+>
+> 你希望重点突出：
+> - `A` → 技术用法（使用技术文档模板）
+> - `B` → 思维转变（使用五层结构模板）
 
 ---
 
@@ -132,8 +200,11 @@ description: Use when completing project work and need to extract reusable knowl
     *   *示例*：`[道-创作心法]-极简白板短视频创作法-内容战略.md`
 
 2.  **选择目录**：
-    *   在 `E:\OBData\ObsidianDatas\3通用技能\` 下寻找最匹配的子目录（如 `知识管理`, `内容创作`, `编程开发`）
-    *   如果找不到合适目录，默认放入 `3通用技能\Inbox`
+    *   **通用能力资产**：在 `E:\OBData\ObsidianDatas\3通用技能\` 下寻找最匹配的子目录（如 `知识管理`, `内容创作`, `职场发展`）
+    *   **技术知识资产**：在 `E:\OBData\ObsidianDatas\1专业技能\` 下寻找最匹配的子目录（如 `A软件编程技能\前端开发`, `2医疗器械研发管理\软件工程`）
+    *   如果找不到合适目录，默认放入：
+        - 通用能力 → `3通用技能\Inbox`
+        - 技术知识 → `1专业技能\Inbox`
 
 2.  **修改原文件的 frontmatter 元数据**：
     *   只修改 status 字段：
@@ -148,8 +219,13 @@ description: Use when completing project work and need to extract reusable knowl
         > 1. [[新资产文件名]] (Level S/A)
 
 4.  **使用模板**：
-    *   Level B 或内容不足：使用 [简化模板](references/template_simple.md)
-    *   Level S / Level A：使用 [完整模板](references/template_complete.md)
+    *   **通用能力资产**：
+        - Level B 或内容不足：使用 [简化模板](references/template_simple.md)
+        - Level S / Level A：使用 [完整模板](references/template_complete.md)
+    *   **技术知识资产**：
+        - API/工具/配置：使用 [技术文档模板](references/template_technical.md)
+        - 算法/数据结构：使用 [算法模板](references/template_algorithm.md)
+        - 架构/设计决策：使用 [架构决策记录模板](references/template_architecture.md)
     *   **状态标记**：新建资产的 `status` 字段必须默认为 `Beta` (🌿)，表示"刚提炼但未在其他场景验证"。只有在以后复盘确认有效后，才手动改为 `Stable`。
 
 ---
@@ -171,12 +247,20 @@ description: Use when completing project work and need to extract reusable knowl
 
 ## 详细参考资料
 
+### 规则与标准
 - **关系识别详细规则**：[relationship_rules.md](references/relationship_rules.md)
 - **模板填写标准**：[standards.md](references/standards.md)
 - **完整示例**：[examples.md](references/examples.md)
 - **常见错误与避坑**：[common_mistakes.md](references/common_mistakes.md)
+
+### 通用能力模板
 - **简化模板**：[template_simple.md](references/template_simple.md)
-- **完整模板**：[template_complete.md](references/template_complete.md)
+- **完整模板（五层结构）**：[template_complete.md](references/template_complete.md)
+
+### 技术知识模板
+- **技术文档模板**：[template_technical.md](references/template_technical.md) - 适用于API、工具脚本、配置规范
+- **算法模板**：[template_algorithm.md](references/template_algorithm.md) - 适用于算法、数据结构、复杂度分析
+- **架构决策记录模板**：[template_architecture.md](references/template_architecture.md) - 适用于架构决策、技术选型、系统设计
 
 ---
 
