@@ -33,34 +33,67 @@ description: |
 
 当你输入 `/task-start` 或 `/kickoff` 或 `/start` 时：
 
-### Step 1: 询问任务信息
+### Step 1: 询问任务信息（细分场景）
 使用 `AskUserQuestion` 工具询问：
-- **任务名称**：简短描述（例如："修复登录超时Bug"）
-- **任务类型**：选择对应的任务类型
+- **任务名称**：简短描述（例如："Claude Code导出乱码问题排查"）
+- **任务类型**（细分场景）：
+  - 技术开发-问题排查（Bug修复、报错排查、乱码问题等）
+  - 技术开发-功能开发（新功能实现、模块开发）
+  - 技术开发-配置部署（环境搭建、工具安装）
+  - 技术开发-学习实践（学习新框架、新技术）
+  - 工具实践-问题解决（用工具解决具体问题）
+  - 工具实践-功能探索（探索工具使用方法）
+  - 创作类-内容创作（文章、教程、文档）
 - **项目目录**：存放位置（默认为当前工作目录下的项目记录文件夹）
 
-### Step 2: 动态加载模板
-根据用户选择的任务类型，读取对应的模板文件：
+### Step 2: 智能推荐模板层级
+根据任务类型，智能推荐合适的模板层级：
 
-**技术类任务**：
-- Bug修复 → `references/templates/tech-bug-fix.md`
-- 新功能开发 → `references/templates/tech-feature-dev.md`
+**推荐逻辑**：
+- 问题排查 / 问题解决 → 推荐**简化版**（可选极简/完整）
+- 功能开发 / 学习实践 → 推荐**完整版**（可选简化）
+- 功能探索 → 推荐**简化版**（可选极简/完整）
+
+**模板层级说明**：
+- **极简版**：问题→尝试→方案（4个章节，5分钟填写）
+- **简化版**：问题→试错→方案→根因→复盘（6个章节，15分钟填写）✨推荐
+- **完整版**：完整执行框架+清单（11个章节，30分钟填写）
+
+询问用户："根据你的任务类型，推荐使用【简化版】模板，是否需要调整？"
+
+### Step 3: 动态加载模板
+根据 **任务类型 + 模板层级** 确定模板文件：
+
+**技术开发类**：
+- 问题排查-极简版 → `references/templates/tech-troubleshoot-minimal.md`
+- 问题排查-简化版 → `references/templates/tech-troubleshoot-simplified.md`
+- 问题排查-完整版 → `references/templates/tech-bug-fix.md`
+- 功能开发-简化版 → `references/templates/tech-feature-simplified.md`
+- 功能开发-完整版 → `references/templates/tech-feature-dev.md`
 - 配置部署 → `references/templates/tech-deploy.md`
-- 性能优化 → `references/templates/tech-performance.md`
-- 需求调研 → `references/templates/tech-research.md`
+- 学习实践 → `references/templates/tech-learning-full.md`
+
+**工具实践类**：
+- 问题解决-极简版 → `references/templates/tool-problem-minimal.md`
+- 问题解决-简化版 → `references/templates/tool-problem-simplified.md`
+- 功能探索 → `references/templates/tool-exploration-simplified.md`
 
 **创作类任务**：
 - 内容创作 → `references/templates/content-creation.md`
 
-### Step 3: 生成文档
+### Step 4: 生成文档
 - **文件名**：`{YYYY-MM-DD}-实战-{任务名称}.md`
-- **内容**：根据模板生成完整的执行框架
+- **内容**：根据选择的模板生成执行框架
 - **位置**：指定的项目目录
 
-### Step 4: 确认与提示
-- 告诉用户文档已创建
-- 提示配合使用：可选运行 `/shotlist` 生成详细截图清单
-- 提示对照清单边做边记
+### Step 5: 确认与提示
+- 告诉用户文档已创建（标注使用的模板层级）
+- 说明模板特点：
+  - 极简版：快速记录，适合30分钟内的问题
+  - 简化版：核心章节，适合1-2小时的任务
+  - 完整版：全面记录，适合2小时以上的项目
+- 提示配合使用：如需详细截图规划，可运行 `/shotlist`
+- 提示核心原则：边做边记，不要事后回忆
 
 ---
 
