@@ -12,9 +12,10 @@ description: |
 
 ## 快速流程
 1. **确定保存位置**：固定使用 `E:\OBData\ObsidianDatas\0收集箱日清`，无需询问。
-2. **确定任务名称**：
-   - 若用户携带参数（如 `/task-capture fix bug`），直接取作任务名。
-   - 若无参数，再询问任务名称。
+2. **处理任务信息**：
+   - **输入获取**：用户提供的参数（如 `/task-capture ...`）视为“任务描述”。若无参数则询问。
+   - **名称提炼**：AI 自动将“任务描述”提炼为简短的任务名（建议 5-15 字，去除“我要”、“一个”等冗余词），用于文件名。
+   - **示例**：输入“我要测试一下那个新写的技能” -> 提炼为“测试新编写技能”。
 3. 自动判定任务类型：`dev` / `tool-demo` / `mixed`，并让用户一键确认。
 4. 创建采集文档：`YYYY-MM-DD-任务名称.md`（确保写入到 `E:\OBData\ObsidianDatas\0收集箱日清`）。
 5. 提示使用方式：标注 `MM:SS`、只采集不复盘、需要复盘用 `/task-close`。
@@ -36,7 +37,9 @@ description: |
 - 边界情况与失败兜底：`references/EDGE_CASES.md`
 
 ## 输出约定（最小）
-- 文件路径：`E:\OBData\ObsidianDatas\0收集箱日清\{YYYY-MM-DD}-{任务名称}.md`
+- 文件路径：`E:\OBData\ObsidianDatas\0收集箱日清\{YYYY-MM-DD}-{短任务名}.md`
+- 文档标题：`# {YYYY-MM-DD}-{短任务名}`
+- 原始描述：建议保留用户的原始输入在 `goal` 或其他描述字段中（可选）。
 - 模板组合：`Base + {dev|tool-demo|mixed}`
 - 收尾提示：
   - 关键记录请标注 `MM:SS`

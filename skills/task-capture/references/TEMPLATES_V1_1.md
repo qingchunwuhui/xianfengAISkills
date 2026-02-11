@@ -15,7 +15,7 @@
 ## 1) Base 通用模板（必选）
 
 ```markdown
-# {YYYY-MM-DD}-{任务名称}
+# {YYYY-MM-DD}-{短任务名}
 
 ---
 type: 沉淀/工具
@@ -28,7 +28,7 @@ status: 待日清
 
 ## 🎬 演示目标
 - 面向对象：{audience}
-- 本次要解决：{goal}
+- 本次要解决：{goal} (用户原始输入)
 - 预期产出：{deliverable}
 
 ## ✅ 成功判定（Done）
