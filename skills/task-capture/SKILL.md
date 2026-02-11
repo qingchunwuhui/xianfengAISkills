@@ -11,10 +11,13 @@ description: |
 我是你的**场记板**，不是分析师。
 
 ## 快速流程
-1. 询问两个信息：`任务名称`、`保存位置`。
-2. 自动判定任务类型：`dev` / `tool-demo` / `mixed`，并让用户一键确认。
-3. 创建采集文档：`YYYY-MM-DD-任务名称.md`。
-4. 提示使用方式：标注 `MM:SS`、只采集不复盘、需要复盘用 `/task-close`。
+1. **确定保存位置**：固定使用 `E:\OBData\ObsidianDatas\0收集箱日清`，无需询问。
+2. **确定任务名称**：
+   - 若用户携带参数（如 `/task-capture fix bug`），直接取作任务名。
+   - 若无参数，再询问任务名称。
+3. 自动判定任务类型：`dev` / `tool-demo` / `mixed`，并让用户一键确认。
+4. 创建采集文档：`YYYY-MM-DD-任务名称.md`（确保写入到 `E:\OBData\ObsidianDatas\0收集箱日清`）。
+5. 提示使用方式：标注 `MM:SS`、只采集不复盘、需要复盘用 `/task-close`。
 
 ## 常见场景
 - **编程开发（dev）**：Bug 修复、调试、接口排查、代码验证。
@@ -33,7 +36,7 @@ description: |
 - 边界情况与失败兜底：`references/EDGE_CASES.md`
 
 ## 输出约定（最小）
-- 文件名：`{YYYY-MM-DD}-{任务名称}.md`
+- 文件路径：`E:\OBData\ObsidianDatas\0收集箱日清\{YYYY-MM-DD}-{任务名称}.md`
 - 模板组合：`Base + {dev|tool-demo|mixed}`
 - 收尾提示：
   - 关键记录请标注 `MM:SS`
