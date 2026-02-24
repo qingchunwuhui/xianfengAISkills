@@ -1,6 +1,10 @@
 ---
 name: asset-refiner
-description: Use when completing project work and need to extract reusable knowledge from project notes. Triggers on "整理资产", "提炼", project retrospectives, or high-context debugging sessions that revealed valuable patterns. Triggers:/asset-refine, /asset-extract
+description: >
+  从项目记录中提炼可复用的通用知识资产（工具/方法/模型）。
+  TRIGGERS ONLY on command: /asset-refine, /asset-extract
+  Do NOT use automatically based on conversation context.
+  AUTHORIZED ONLY when user explicitly types "/asset-refine", "/asset-extract".
 ---
 
 # 资产提炼厂 (Asset Refiner)
