@@ -15,8 +15,6 @@
 ## 1) Base 通用模板（必选）
 
 ```markdown
-# {YYYY-MM-DD}-{短任务名}
-
 ---
 type: 沉淀/工具
 tags:
@@ -25,6 +23,8 @@ tags:
 create_date: {YYYY-MM-DD}
 status: 待日清
 ---
+
+# {YYYY-MM-DD}-{短任务名}
 
 ## 🎬 演示目标
 - 面向对象：{audience}

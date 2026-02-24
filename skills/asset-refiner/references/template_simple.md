@@ -6,8 +6,8 @@ type: 沉淀/工具
 class: {根据类型填: 决策模型/操作规范/实战技巧/Prompt/模板}
 level: {S/A/B}
 tags:
-  - {核心关键词1}
-  - {核心关键词2}
+aliases:
+keywords:
 create_date: {YYYY-MM-DD}
 ---
 

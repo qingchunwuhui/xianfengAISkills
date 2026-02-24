@@ -14,8 +14,8 @@ level: {S | A | B}
 tech_stack: [{技术栈1}, {技术栈2}, ...]
 status: Beta
 tags:
-  - {技术关键词1}
-  - {技术关键词2}
+aliases:
+keywords:
 create_date: YYYY-MM-DD
 ---
 

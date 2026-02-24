@@ -1,10 +1,10 @@
 ---
 name: daily-review
 description: |
+  Use ONLY when explicitly invoked via slash commands: /daily-review.Do not trigger on general requests.
   日清助手 - AI辅助决策的知识收集箱清理工具。
   Agent 给出"保留/删除"建议及理由，用户确认后手动执行。
   遵循"采集不判断，日清做决策"原则，5-10分钟完成每日知识整理。
-  Triggers: /daily-review, /日清, /review
 ---
 
 # 日清助手 (Daily Review)

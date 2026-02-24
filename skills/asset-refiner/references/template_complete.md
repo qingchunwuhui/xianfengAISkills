@@ -8,10 +8,8 @@ level: {S | A | B}
 summary: "{Level S必填：一句话精华观点}"
 review_freq: {Month | Quarter | None}
 tags:
-  - {关键词1}
-  - {关键词2}
 aliases:
-  - {别名1}
+keywords:
 create_date: YYYY-MM-DD
 status: {草稿 | 待完善 | 已完善}
 validate_date: YYYY-MM-DD
